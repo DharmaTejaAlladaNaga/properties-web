@@ -5,29 +5,29 @@ import routes from '../routes'
 import Sidebar from '../components/Sidebar'
 import Header from '../components/Header'
 import Main from '../containers/Main'
-import ThemedSuspense from '../components/ThemedSuspense'
-import { SidebarContext } from '../context/SidebarContext'
+// import ThemedSuspense from '../components/ThemedSuspense'
+// import { SidebarContext } from '../context/SidebarContext'
 
 const Page404 = lazy(() => import('../pages/404'))
 
 function Layout() {
-  const { isSidebarOpen, closeSidebar } = useContext(SidebarContext)
+  // const { isSidebarOpen, closeSidebar } = useContext(SidebarContext)
   let location = useLocation()
 
   useEffect(() => {
-    closeSidebar()
+    // closeSidebar()
   }, [location])
 
   return (
     <div
-      className={`flex h-screen bg-gray-50 dark:bg-gray-900 ${isSidebarOpen && 'overflow-hidden'}`}
+      className={`flex h-screen bg-gray-50 dark:bg-gray-900 ${ 'overflow-hidden'}`}
     >
       {/* <Sidebar /> */}
 
       <div className="flex flex-col flex-1 w-full">
         <Header />
         <Main>
-          <Suspense fallback={<ThemedSuspense />}>
+          {/* <Suspense fallback={<ThemedSuspense />}> */}
             <Switch>
               {routes.map((route, i) => {
                 return route.component ? (
@@ -39,10 +39,10 @@ function Layout() {
                   />
                 ) : null
               })}
-              <Redirect exact from="/app" to="/app/dashboard" />
+              <Redirect exact from="/app" to="/app/home" />
               <Route component={Page404} />
             </Switch>
-          </Suspense>
+          {/* </Suspense> */}
         </Main>
       </div>
     </div>

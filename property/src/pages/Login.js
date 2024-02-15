@@ -8,48 +8,51 @@ import { Label, Input, Button } from '@windmill/react-ui'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom';
 import { useLocation } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Login() {
-  const location = useLocation();
-  const isLoggedin = location.state;
-  const [token,setToken] = useState("");
-  
-  const [loginData, setLoginData] = useState({
-    email:"",
-    password: ""
-  });
-
+  const[befoerLogin, setBeforeLogin] = useState(["Login", "Create Account"]);
+  const[afterLogin, setAfterLogin] = useState(["View Profile", "Update Profile", "Logout"]);
+  const [token,setToken] = useState("");  
+  const [loginData, setLoginData] = useState({email:"", password: "" });
   const history = useHistory();
-
-  const handelChange = (e) => {
-    const value = e.target.value;
-    setLoginData({
-      ...loginData,
-      [e.target.name]: value
-    });
-  };
+  const location = useLocation();
   
+  // <!---Change Input Values---!>
+  const handelChange = (e) => {
+                                const value = e.target.value;
+                                setLoginData({...loginData,[e.target.name]: value});
+                              };
+  // <!---  Submit Login---!>
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const userData = {
-      email: loginData.email,
-      password: loginData.password
-    };
-   axios.post("http://192.168.68.102/api/api/login",userData,{headers: {
-    // 'Authorization': `bearer ${token}`,
-    'Content-Type' : 'multipart/form-data','connection' :'keep-alive','Accept': 'application/json'
-   }}).then((response) => {
-          if(response.status === 200){
-            location.state= false;
-            history.push("/app")
-            setToken(response.data.authorization.token)
-          }
-    console.log(response);
-    })
-.catch((error) => {
-   alert(error)
-  })
-  }
+                                e.preventDefault();
+                                const userData = {email: loginData.email, password: loginData.password};
+                                axios.post("http://192.168.68.102/api/api/login",userData,{headers: {
+                                                                                                  // 'Authorization': `bearer ${token}`,
+                                                                                                     'Content-Type' : 'multipart/form-data','connection' :'keep-alive','Accept': 'application/json'
+                                                                                                    }
+                                                                                          })
+                                .then((response) => {
+                                                      if(response.status === 200){
+                                  
+                                                          if(response.data.user.user_type === 0){
+                                                                alert("Logged in Success")
+                                                            history.push({pathname : "/app/Home",  ...location.state = true  })
+                                                            setToken(response.data.authorization.token)
+                                                          }else{
+                                                                history.push({pathname : "/app/Dashboard"})
+                                                                setToken(response.data.authorization.token)
+                                                                }
+                                                                                }
+                                                     
+                                    
+                                      })
+                                .catch((err) => {
+                                  
+                                                  toast(err.message)
+                                                  })
+              }
 
   return (
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
@@ -69,6 +72,7 @@ function Login() {
               alt="Office"
             />
           </div>
+          <ToastContainer />
           <main className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
             <div className="w-full">
               <h1 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">Login</h1>
@@ -101,7 +105,7 @@ function Login() {
               <p className="mt-4">
                 <Link
                   className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  to="/forgot-password"
+                  to="/app/forgot-password"
                 >
                   Forgot your password?
                 </Link>
@@ -109,7 +113,7 @@ function Login() {
               <p className="mt-1">
                 <Link
                   className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  to="/create-account"
+                  to="/app/create-account"
                 >
                   Create account
                 </Link>

@@ -2,6 +2,7 @@ import { lazy } from 'react'
 
 // use lazy for better code splitting, a.k.a. load faster
 const Dashboard = lazy(() => import('../pages/Dashboard'))
+const Home = lazy(() => import('../pages/UserDashboard'))
 const Forms = lazy(() => import('../pages/Forms'))
 const Cards = lazy(() => import('../pages/Cards'))
 const Charts = lazy(() => import('../pages/Charts'))
@@ -12,6 +13,8 @@ const Page404 = lazy(() => import('../pages/404'))
 const Blank = lazy(() => import('../pages/Blank'))
 const Login = lazy(()=> import('../pages/Login'))
 const SignUp =  lazy(()=> import('../pages/CreateAccount'))
+const ForgotPassword =  lazy(()=> import('../pages/ForgotPassword'))
+
 /**
  * ⚠ These are internal routes!
  * They will be rendered inside the app, using the default `containers/Layout`.
@@ -26,6 +29,10 @@ const routes = [
   {
     path: '/dashboard', // the url
     component: Dashboard, // view rendered
+  },
+  {
+    path: '/home', // the url
+    component: Home, // view rendered
   },
   {
     path: '/forms',
@@ -64,6 +71,9 @@ const routes = [
   },{
     path : '/create-account',
     component: SignUp,
+  },{
+    path : '/forgot-password',
+    component: ForgotPassword,
   }
 ]
 
